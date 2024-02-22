@@ -16,7 +16,66 @@
   }
 }
 
-body {
+.progress-bar {
+  width: 100%;
+  height: 30px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.progress-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--percentage);
+  background-color: #007bff;
+  border-radius: 5px;
+}
+
+.html::after {
+  width: var(--percentage);
+}
+
+.css::after {
+  width: var(--percentage);
+}
+
+.php::after {
+  width: var(--percentage);
+}
+
+.reactjs::after {
+  width: var(--percentage);
+}
+
+.nodejs::after {
+  width: var(--percentage);
+}
+
+.nextjs::after {
+  width: var(--percentage);
+}
+
+/* .fullstack {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+    color: #cc8c8f;
+    background-image: -webkit-linear-gradient(45deg, #cc8c8f 8%, #a700aa 60%, #aa2273 68%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    text-fill-color: transparent;
+    -webkit-text-fill-color: transparent;
+} */
+
+/* .main {
+  background-size: 40px 40px;
+  background-image: radial-gradient(circle, #fff 1px, rgba(0,0,0,0) 1px);
+} */
+
+/* body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -24,4 +83,4 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-}
+} */

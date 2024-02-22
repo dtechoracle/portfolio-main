@@ -1,113 +1,220 @@
-import Image from 'next/image'
+"use client";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { useEffect, useState } from "react";
+import Navbar from "./Components/Navbar";
+import Image from "next/image";
+import { useFontLoader } from "@next/font/google";
 
-export default function Home() {
+const SplashScreen = () => {
+  // const { Poppins } = useFontLoader({ Poppins: { subsets: ["latin"] } });
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const getRandomInt = (min, max) =>
+    Math.floor(Math.random() * (max - min + 1)) + min;
+
+  const colors = ["#000000", "#61677a", "#d8d9da", "#1d1d1d"];
+  const nameVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+  const [loading, setLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+    };
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const [falling, setFalling] = useState(false);
+  const controls = useAnimation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const pillsContainer = document.getElementById("pills-container");
+      const scrollPosition = window.scrollY;
+
+      if (
+        pillsContainer &&
+        scrollPosition >= pillsContainer.offsetTop &&
+        !falling
+      ) {
+        // Start falling animation
+        setFalling(true);
+        controls.start({
+          y: "100%",
+          transition: { duration: 0.5 },
+        });
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [falling, controls]);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div>
+      <AnimatePresence>
+        {loading && (
+          <motion.div
+            key="splash"
+            initial={{ opacity: 0, x: "-100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "-100%" }}
+            transition={{ duration: 0.5 }}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            {colors.map((color, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: "-100%" }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: "-100%" }}
+                transition={{ duration: 0.3, delay: index * 0.3 }}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: color,
+                }}
+              />
+            ))}
+            <motion.div
+              key="name"
+              variants={nameVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ duration: 0.8, delay: colors.length * 0.3 }}
+              style={{ zIndex: 1 }}
+            >
+              <h1
+                style={{
+                  color: "#fff",
+                  fontFamily: "fantasy",
+                }}
+                className="font-bold text-[100px]"
+              >
+                DTO.
+              </h1>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {!loading && (
+        <div className="bg-[#171717] main h-[100%]">
+          {/* Your content goes here */}
+          <Navbar />
+          <div className="">
+            <div className="w-full p-8">
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <p className="text-center text-white ">Hi 👋</p>
+                <h2
+                  className="text-6xl font-bold mb-4 text-center"
+                  style={{
+                    color: "#fff",
+                    fontFamily: "Poppins, sans-serif", // Added Poppins font-family
+                  }}
+                >
+                  <br />
+                  Let's build &nbsp;
+                  <span className="bg-white text-black p-2">Websites</span>{" "}
+                  <br />
+                  together
+                </h2>
+
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Image
+                    src="/male.png"
+                    width={250}
+                    height={250}
+                    className="bg-white rounded-full p-2"
+                    style={{ marginRight: "10px" }} // Adjust spacing between images as needed
+                  />
+                  <Image
+                    src="/female.png"
+                    width={250}
+                    height={250}
+                    className="bg-white rounded-full p-2"
+                    style={{ marginLeft: "10px" }} // Adjust spacing between images as needed
+                  />
+                </div>
+                <br />
+                <button className="block mx-auto py-2 px-4 bg-yellow-500 font-bold text-white rounded-r-full rounded-l-none hover:bg-blue-600">
+                  Let's collabo
+                </button>
+                <br />
+                <hr />
+                <div className="flex flex-col md:flex-row">
+                  <div className="md:w-1/2 p-6">
+                    {/* Left section containing text */}
+                    <h2 className="text-2xl font-bold text-yellow-500 mb-4">
+                      About me
+                    </h2>
+                    <p
+                      style={{
+                        color: "#fff",
+                        fontFamily: "Poppins, sans-serif",
+                      }}
+                    >
+                      My name is Ezekiel Jeremiah and I am a Frontend Developer
+                      with more than 4yrs of experience and I build
+                      user-friendly webapps for fast-growing startups & digital
+                      agencies.
+                    </p>
+                  </div>
+                  <div class="md:w-1/2 bg-white rounded-xl flex justify-around">
+                    <progress />
+                    hi
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right Side (Image) */}
+            <motion.div
+              className="w-full md:w-1/2 overflow-hidden"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            ></motion.div>
+          </div>
         </div>
-      </div>
+      )}
+    </div>
+  );
+};
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+export default SplashScreen;
