@@ -195,10 +195,10 @@ const SplashScreen = () => {
                       agencies.
                     </p>
                   </div>
-                  <div class="md:w-1/2 bg-white rounded-xl flex justify-around">
+                  {/* <div class="md:w-1/2 bg-white rounded-xl flex justify-around">
                     <progress />
                     hi
-                  </div>
+                  </div> */}
                 </div>
               </motion.div>
             </div>
